@@ -1,17 +1,16 @@
-package main
+package quiz
 
 import (
 	"encoding/json"
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
-	"html"
-	// Import develop version, because stable version with poll feature not fucking released yet
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/jasonlvhit/gocron"
+	"html"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -21,17 +20,15 @@ const EnQuizDBURL = "https://opentdb.com/api.php?amount=1"
 // RuQuizDBURL is URL for russian questions
 const RuQuizDBURL = "https://engine.lifeis.porn/api/millionaire.php?q="
 
-// TOKEN is telegram bot token
-const TOKEN = os.Getenv("BOT_TOKEN")
-
 // CHATID is id of chat for direct conversation
-const CHATID = int(os.Getenv("CHAT_ID"))
+var CHATID, _ = strconv.Atoi(os.Getenv("CHAT_ID"))
 
 // RuLevels is levels list
 var RuLevels = [...]int{
 	1, // Easy
 	2, // Medium
 	3, // Hard
+	4, // Child
 }
 
 // RuLevelsMap is map of difficulty levels
@@ -39,6 +36,7 @@ var RuLevelsMap = map[int]string{
 	1: "easy",
 	2: "medium",
 	3: "hard",
+	4: "child",
 }
 
 // EnQuestion is a structure containing info about questions - answers, difficulty, etc
@@ -151,7 +149,8 @@ func getIndex(sl []string, el string) int {
 	return -1
 }
 
-func sendEnMsg(bot *tgbotapi.BotAPI) {
+// SendEnMsg is for sending msg with eng question
+func SendEnMsg(bot *tgbotapi.BotAPI) {
 	q, err := GetEnQuestion()
 	if err != nil {
 		fmt.Printf("Error: %v", err)
@@ -177,7 +176,8 @@ func sendEnMsg(bot *tgbotapi.BotAPI) {
 	bot.Send(pollMsg)
 }
 
-func sendRuMsg(bot *tgbotapi.BotAPI) {
+// SendRuMsg is for sending msg with ru question
+func SendRuMsg(bot *tgbotapi.BotAPI) {
 	q, err := GetRuQuestion()
 	if err != nil {
 		fmt.Printf("Error: %v", err)
@@ -201,27 +201,4 @@ func sendRuMsg(bot *tgbotapi.BotAPI) {
 		CorrectOptionID: int64(correctIndex),
 	}
 	bot.Send(pollMsg)
-
-}
-
-func main() {
-	bot, err := tgbotapi.NewBotAPI(TOKEN)
-	if err != nil {
-		fmt.Printf("Error: %v", err)
-	}
-	bot.Debug = true
-	/*  u := tgbotapi.NewUpdate(0) */
-	// u.Timeout = 60
-	// updates := bot.GetUpdatesChan(u)
-	// for update := range updates {
-	// if update.Message == nil {
-	// continue
-	// }
-	// fmt.Println(update.Message.Chat.ID)
-	/* } */
-	//	gocron.Every(1).Minute().Do(sendEnMsg, bot)
-	gocron.Every(1).Day().At("11:00").Do(sendRuMsg, bot)
-	gocron.Every(1).Day().At("18:00").Do(sendEnMsg, bot)
-	<-gocron.Start()
-	//	fmt.Println(html.UnescapeString(ql.Data[0].Question))
 }
