@@ -2,13 +2,16 @@ package main
 
 import (
 	// Import develop version, because stable version with poll feature not fucking released yet
-	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/ivanovmi/quizbot/pkg/quiz"
+	//	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"fmt"
+	quiz "github.com/ivanovmi/quizbot/pkg/quiz"
+	"github.com/ivanovmi/telegram-bot-api"
 	"github.com/jasonlvhit/gocron"
+	"os"
 )
 
 // TOKEN is telegram bot token
-const TOKEN = os.Getenv("BOT_TOKEN")
+var TOKEN = os.Getenv("BOT_TOKEN")
 
 func main() {
 	bot, err := tgbotapi.NewBotAPI(TOKEN)
@@ -25,7 +28,8 @@ func main() {
 	// }
 	// fmt.Println(update.Message.Chat.ID)
 	/* } */
-	gocron.Every(1).Day().At("11:00").Do(SendRuMsg, bot)
-	gocron.Every(1).Day().At("18:00").Do(SendEnMsg, bot)
+	gocron.Every(1).Day().At("10:00").Do(quiz.SendMsg, bot, "ru")
+	gocron.Every(1).Day().At("14:00").Do(quiz.SendMsg, bot, "ru-tf")
+	gocron.Every(1).Day().At("18:00").Do(quiz.SendMsg, bot, "en")
 	<-gocron.Start()
 }
