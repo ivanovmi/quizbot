@@ -31,5 +31,6 @@ func main() {
 	gocron.Every(1).Day().At("10:00").Do(quiz.SendMsg, bot, "ru")
 	gocron.Every(1).Day().At("14:00").Do(quiz.SendMsg, bot, "ru-tf")
 	gocron.Every(1).Day().At("18:00").Do(quiz.SendMsg, bot, "en")
+	gocron.Every(1).Sunday().At("15:00").Do(quiz.SendScheduleMsg, bot)
 	<-gocron.Start()
 }
