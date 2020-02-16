@@ -10,8 +10,6 @@ import (
 	//	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/ivanovmi/telegram-bot-api"
 	"html"
-	"os"
-	"strconv"
 )
 
 const (
@@ -22,9 +20,6 @@ const (
 	clock  = "\xF0\x9F\x95\x94"
 	finger = "\xF0\x9F\x91\x89"
 )
-
-// CHATID is id of chat for direct conversation
-var CHATID, _ = strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 
 // Schedule is game schedule
 type Schedule struct {
