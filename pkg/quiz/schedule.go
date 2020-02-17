@@ -12,30 +12,6 @@ import (
 	"html"
 )
 
-const (
-	// URL is a quizplease site URL
-	URL    = "https://saratov.quizplease.ru"
-	house  = "\xF0\x9F\x8F\xA0"
-	link   = "\xF0\x9F\x94\x97"
-	clock  = "\xF0\x9F\x95\x94"
-	finger = "\xF0\x9F\x91\x89"
-	cal    = "\xF0\x9F\x93\x85"
-)
-
-// Schedule is game schedule
-type Schedule struct {
-	Games []Game
-}
-
-// Game is just a game :)
-type Game struct {
-	Title string
-	URL   string
-	Place string
-	Time  string
-	Date  string
-}
-
 func getSchedule() (*Schedule, error) {
 	res, err := http.Get("http://saratov.quizplease.ru/schedule")
 	if err != nil {

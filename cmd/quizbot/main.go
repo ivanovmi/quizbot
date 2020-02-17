@@ -13,6 +13,13 @@ import (
 // TOKEN is telegram bot token
 var TOKEN = os.Getenv("BOT_TOKEN")
 
+// QuizSchedule is schedule for questions
+var QuizSchedule = map[string]string{
+	"10:00": "ru",
+	"14:00": "ru-tf",
+	"18:00": "en",
+}
+
 func main() {
 	bot, err := tgbotapi.NewBotAPI(TOKEN)
 	if err != nil {
@@ -28,9 +35,9 @@ func main() {
 	// }
 	// fmt.Println(update.Message.Chat.ID)
 	/* } */
-	gocron.Every(1).Day().At("10:00").Do(quiz.SendMsg, bot, "ru")
-	gocron.Every(1).Day().At("14:00").Do(quiz.SendMsg, bot, "ru-tf")
-	gocron.Every(1).Day().At("18:00").Do(quiz.SendMsg, bot, "en")
+	for time, t := range QuizSchedule {
+		gocron.Every(1).Day().At(time).Do(quiz.SendMsg, bot, t)
+	}
 	gocron.Every(1).Sunday().At("15:00").Do(quiz.SendScheduleMsg, bot)
 	<-gocron.Start()
 }
