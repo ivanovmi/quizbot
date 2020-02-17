@@ -19,6 +19,7 @@ const (
 	link   = "\xF0\x9F\x94\x97"
 	clock  = "\xF0\x9F\x95\x94"
 	finger = "\xF0\x9F\x91\x89"
+	cal    = "\xF0\x9F\x93\x85"
 )
 
 // Schedule is game schedule
@@ -32,6 +33,7 @@ type Game struct {
 	URL   string
 	Place string
 	Time  string
+	Date  string
 }
 
 func getSchedule() (*Schedule, error) {
@@ -48,12 +50,14 @@ func getSchedule() (*Schedule, error) {
 		log.Fatal(err)
 	}
 	var games []Game
-	doc.Find(".schedule-column .schedule-block").Each(func(i int, s *goquery.Selection) {
+	doc.Find(".schedule-column").Each(func(i int, s *goquery.Selection) {
 		var g Game
 		title := s.Find(".h2-game-card").Text()
 		title = strings.ReplaceAll(title, "[", "")
 		title = strings.ReplaceAll(title, "]", "")
 		g.Title = title
+		date := s.Find(".h3")
+		g.Date = date.Text()
 		href := s.Find("a[href].schedule-block-head")
 		href.Each(func(i int, s *goquery.Selection) {
 			h, _ := s.Attr("href")
@@ -80,7 +84,7 @@ func SendScheduleMsg(bot *tgbotapi.BotAPI) {
 	spew.Dump(s)
 	for _, g := range s.Games {
 		spew.Dump(g)
-		games = append(games, fmt.Sprintf("%s [%s](%s)\n%s %s\n%s %s", finger, html.UnescapeString(g.Title), g.URL, house, g.Place, clock, g.Time))
+		games = append(games, fmt.Sprintf("%s [%s](%s)\n%s %s\n%s %s\n%s %s", finger, html.UnescapeString(g.Title), g.URL, house, g.Place, cal, g.Date, clock, g.Time))
 	}
 	spew.Dump(games)
 	msg := tgbotapi.NewMessage(CHATID, strings.Join(games, "\n\n"))
