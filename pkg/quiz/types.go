@@ -13,6 +13,8 @@ const (
 	RuQuizURL = "https://engine.lifeis.porn/api/millionaire.php?q="
 	// RuTrueFalseURL is URL for True-False questions in russian
 	RuTrueFalseURL = "https://engine.lifeis.porn/api/true_or_false.php"
+	// PDDURL for rand pdd question
+	PDDURL = "http://bilety-pdd24.ru"
 	// URL is a quizplease site URL
 	URL = "https://saratov.quizplease.ru"
 	// GlobalRatingURL is global team rating
@@ -83,6 +85,7 @@ type Question struct {
 	Question        string
 	CorrectAnswer   string
 	IncorrectAnswer []string
+	ImgURL          string
 }
 
 type ruTrueFalseData struct {

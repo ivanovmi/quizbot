@@ -10,6 +10,8 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"regexp"
+	"strings"
 	"time"
 )
 
@@ -87,6 +89,43 @@ func getRuTrueFalseQuestion() (*ruTrueFalse, error) {
 	return &q.Data[0], nil
 }
 
+func beautifyString(s string) string {
+	return strings.ReplaceAll(strings.ReplaceAll(strings.Split(s, "=")[1], "\"", ""), ";", "")
+}
+
+func getPddQuestion() *Question {
+	var q Question
+	q.Category = "ПДД"
+	rand.Seed(time.Now().UnixNano())
+	d, _ := getDoc(fmt.Sprintf("%s%s", PDDURL, "/?rand"))
+	sel := d.Find("script")
+	script := sel.Eq(1).Text()
+	rIndex := rand.Intn(9)
+	qPattern := fmt.Sprintf("(qL\\[%d\\]=\".*)", rIndex)
+	aPattern := fmt.Sprintf("(aL\\[%d\\]\\[\\d\\]=\".*)", rIndex)
+	caPattern := fmt.Sprintf("(tp\\[%d\\]\\[\\d\\]=\\d)", rIndex)
+	imgPattern := fmt.Sprintf("(imgq\\[%d\\].*;n)", rIndex)
+	qr, _ := regexp.Compile(qPattern)
+	ar, _ := regexp.Compile(aPattern)
+	car, _ := regexp.Compile(caPattern)
+	imgr, _ := regexp.Compile(imgPattern)
+	q.Question = beautifyString(qr.FindString(script))
+	a := ar.FindAllString(script, -1)
+	ca := car.FindAllString(script, -1)
+	for i := range a {
+		if strings.HasSuffix(ca[i], "1") {
+			q.CorrectAnswer = beautifyString(a[i])
+		} else {
+			q.IncorrectAnswer = append(q.IncorrectAnswer, beautifyString(a[i]))
+		}
+	}
+	img := imgr.FindString(script)
+	if !strings.Contains(img, "<br>") {
+		q.ImgURL = fmt.Sprintf("%s%s", PDDURL, strings.Split(strings.Fields(img)[3], "'")[1])
+	}
+	return &q
+}
+
 func getQuestion(t string) (*Question, error) {
 	var q Question
 	switch t {
@@ -135,6 +174,9 @@ func getQuestion(t string) (*Question, error) {
 			CorrectAnswer:   correctAnswer,
 			IncorrectAnswer: incorrectAnswer,
 		}
+	case "pdd":
+		fmt.Println("pdd")
+		q = *getPddQuestion()
 	}
 	return &q, nil
 }
@@ -159,6 +201,10 @@ func SendMsg(bot *tgbotapi.BotAPI, t string) {
 		IsAnonymous:     false,
 		Type:            "quiz",
 		CorrectOptionID: int64(correctIndex),
+	}
+	if q.ImgURL != "" {
+		imgMsg := tgbotapi.NewMessage(CHATID, q.ImgURL)
+		bot.Send(imgMsg)
 	}
 	bot.Send(pollMsg)
 }
