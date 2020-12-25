@@ -11,8 +11,6 @@ const (
 	EnQuizURL = "https://opentdb.com/api.php?amount=1"
 	// RuQuizURL is URL for questions in russian
 	RuQuizURL = "https://engine.lifeis.porn/api/millionaire.php?q="
-	// RuTrueFalseURL is URL for True-False questions in russian
-	RuTrueFalseURL = "https://engine.lifeis.porn/api/true_or_false.php"
 	// PDDURL for rand pdd question
 	PDDURL = "http://bilety-pdd24.ru"
 	// URL is a quizplease site URL
@@ -86,16 +84,6 @@ type Question struct {
 	CorrectAnswer   string
 	IncorrectAnswer []string
 	ImgURL          string
-}
-
-type ruTrueFalseData struct {
-	Ok   bool          `json:"ok"`
-	Data []ruTrueFalse `json:"data"`
-}
-
-type ruTrueFalse struct {
-	Fact   string `json:"fact"`
-	IsTrue string `json:"is_true"`
 }
 
 type ruQuestionData struct {

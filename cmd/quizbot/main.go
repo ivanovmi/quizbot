@@ -17,7 +17,6 @@ var TOKEN = os.Getenv("BOT_TOKEN")
 var QuizSchedule = map[string]string{
 	"10:00": "ru",
 	"12:00": "pdd",
-	"14:00": "ru-tf",
 	"18:00": "en",
 }
 

@@ -76,19 +76,6 @@ func getRuQuestion() (*ruQuestion, error) {
 	return &q.Data, nil
 }
 
-func getRuTrueFalseQuestion() (*ruTrueFalse, error) {
-	var q ruTrueFalseData
-	jsonBody, err := get(RuTrueFalseURL)
-	if err != nil {
-		fmt.Printf("Error: %v", err)
-	}
-	err = json.Unmarshal(jsonBody, &q)
-	if err != nil {
-		fmt.Printf("Error: %v", err)
-	}
-	return &q.Data[0], nil
-}
-
 func beautifyString(s string) string {
 	return strings.ReplaceAll(strings.ReplaceAll(strings.Split(s, "=")[1], "\"", ""), ";", "")
 }
@@ -153,26 +140,6 @@ func getQuestion(t string) (*Question, error) {
 			CorrectAnswer:   question.Answers[0],
 			IncorrectAnswer: question.Answers[1:len(question.Answers)],
 			Difficulty:      question.Difficulty,
-		}
-	case "ru-tf":
-		var correctAnswer string
-		var incorrectAnswer []string
-		fmt.Println("ru-tf")
-		question, err := getRuTrueFalseQuestion()
-		if err != nil {
-			fmt.Printf("Error: %v", err)
-		}
-		if question.IsTrue == "1" {
-			correctAnswer = "Правда"
-			incorrectAnswer = []string{"Ложь"}
-		} else {
-			correctAnswer = "Ложь"
-			incorrectAnswer = []string{"Правда"}
-		}
-		q = Question{
-			Question:        question.Fact,
-			CorrectAnswer:   correctAnswer,
-			IncorrectAnswer: incorrectAnswer,
 		}
 	case "pdd":
 		fmt.Println("pdd")
