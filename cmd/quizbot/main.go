@@ -1,7 +1,7 @@
 package main
 
 import (
-	// Import develop version, because stable version with poll feature not fucking released yet
+	// Import develop version, because stable version with poll feature not released yet
 	//	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"fmt"
 	quiz "github.com/ivanovmi/quizbot/pkg/quiz"
@@ -26,15 +26,16 @@ func main() {
 		fmt.Printf("Error: %v", err)
 	}
 	bot.Debug = true
-	/*  u := tgbotapi.NewUpdate(0) */
-	// u.Timeout = 60
-	// updates := bot.GetUpdatesChan(u)
-	// for update := range updates {
-	// if update.Message == nil {
-	// continue
-	// }
-	// fmt.Println(update.Message.Chat.ID)
-	/* } */
+	/*  u := tgbotapi.NewUpdate(0)
+	u.Timeout = 60
+	updates := bot.GetUpdatesChan(u)
+	for update := range updates {
+	if update.Message == nil {
+	continue
+	}
+	fmt.Println(update.Message.Chat.ID)
+	}
+	*/
 	for time, t := range QuizSchedule {
 		gocron.Every(1).Day().At(time).Do(quiz.SendMsg, bot, t)
 	}
