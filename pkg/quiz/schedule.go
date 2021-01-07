@@ -32,20 +32,24 @@ func getSchedule() (*Schedule, error) {
 		title = strings.ReplaceAll(title, "[", "")
 		title = strings.ReplaceAll(title, "]", "")
 		g.Title = title
-		date := s.Find(".h3")
-		g.Date = date.Text()
-		href := s.Find("a[href].schedule-block-head")
-		href.Each(func(i int, s *goquery.Selection) {
-			h, _ := s.Attr("href")
-			g.URL = URL + h
-		})
-		var info []string
-		s.Find(".schedule-info").Find(".techtext").Each(func(i int, s *goquery.Selection) {
-			info = append(info, strings.TrimSpace(s.Text()))
-		})
-		g.Place = fmt.Sprintf("%s (%s)", strings.Join(strings.Fields(info[0])[0:3], " "), info[1])
-		g.Time = info[2]
-		games = append(games, g)
+		if !strings.Contains(g.Title, "стрим") {
+			date := s.Find(".h3")
+			g.Date = date.Text()
+			href := s.Find("a[href].schedule-block-head")
+			href.Each(func(i int, s *goquery.Selection) {
+				h, _ := s.Attr("href")
+				g.URL = URL + h
+			})
+			fmt.Println(g.Title)
+			var info []string
+			s.Find(".schedule-info").Find(".techtext").Each(func(i int, s *goquery.Selection) {
+				info = append(info, strings.TrimSpace(s.Text()))
+			})
+			spew.Dump(info)
+			g.Place = fmt.Sprintf("%s (%s)", strings.Join(strings.Fields(info[0])[0:3], " "), info[1])
+			g.Time = info[2]
+			games = append(games, g)
+		}
 	})
 	schedule := Schedule{
 		Games: games,
