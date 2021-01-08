@@ -19,11 +19,17 @@ const (
 	GlobalRatingURL = "https://saratov.quizplease.ru/rating?QpRaitingSearch%5Bgeneral%5D=1&QpRaitingSearch%5Bleague%5D=1&QpRaitingSearch%5Btext%5D=%D0%A5%D0%BE%D1%80%D0%B5%D0%BA-%D0%BF%D0%B0%D0%BD%D0%B8%D0%BA%D0%B5%D1%80"
 	// SeasonRatingURL is team rating per season
 	SeasonRatingURL = "https://saratov.quizplease.ru/rating?QpRaitingSearch%5Bgeneral%5D=0&QpRaitingSearch%5Bleague%5D=1&QpRaitingSearch%5Btext%5D=%D0%A5%D0%BE%D1%80%D0%B5%D0%BA-%D0%BF%D0%B0%D0%BD%D0%B8%D0%BA%D0%B5%D1%80"
-	house           = "\xF0\x9F\x8F\xA0"
-	link            = "\xF0\x9F\x94\x97"
-	clock           = "\xF0\x9F\x95\x94"
-	finger          = "\xF0\x9F\x91\x89"
-	cal             = "\xF0\x9F\x93\x85"
+	// ScheduleURL is constant url to game schedule
+	ScheduleURL = "http://saratov.quizplease.ru/schedule"
+	// WikiURL is main page of wikipedia
+	WikiURL = "https://ru.wikipedia.org"
+	house   = "\xF0\x9F\x8F\xA0"
+	link    = "\xF0\x9F\x94\x97"
+	clock   = "\xF0\x9F\x95\x94"
+	finger  = "\xF0\x9F\x91\x89"
+	cal     = "\xF0\x9F\x93\x85"
+	page    = "\xF0\x9F\x93\x84"
+	bulb    = "\xF0\x9F\x92\xA1"
 )
 
 var (
@@ -109,4 +115,10 @@ type enQuestion struct {
 	Question        string   `json:"question"`
 	CorrectAnswer   string   `json:"correct_answer"`
 	IncorrectAnswer []string `json:"incorrect_answers"`
+}
+
+// FavArticle is representation of favorite article from wikipedia main page
+type FavArticle struct {
+	Title string
+	URL   string
 }

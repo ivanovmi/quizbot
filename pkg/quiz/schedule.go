@@ -13,7 +13,7 @@ import (
 )
 
 func getSchedule() (*Schedule, error) {
-	res, err := http.Get("http://saratov.quizplease.ru/schedule")
+	res, err := http.Get(ScheduleURL)
 	if err != nil {
 		log.Fatal(err)
 	}

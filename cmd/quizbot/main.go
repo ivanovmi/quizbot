@@ -20,6 +20,11 @@ var QuizSchedule = map[string]string{
 	"18:00": "en",
 }
 
+var WikiSchedule = map[string]string{
+	"14:00": "art",
+	"16:00": "dyk",
+}
+
 func main() {
 	bot, err := tgbotapi.NewBotAPI(TOKEN)
 	if err != nil {
@@ -38,6 +43,9 @@ func main() {
 	*/
 	for time, t := range QuizSchedule {
 		gocron.Every(1).Day().At(time).Do(quiz.SendMsg, bot, t)
+	}
+	for time, t := range WikiSchedule {
+		gocron.Every(1).Day().At(time).Do(quiz.SendWikiMsg, bot, t)
 	}
 	gocron.Every(1).Sunday().At("15:00").Do(quiz.SendScheduleMsg, bot)
 	gocron.Every(1).Thursday().At("15:00").Do(quiz.SendRatingMsg, bot)
