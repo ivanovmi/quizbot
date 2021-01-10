@@ -47,6 +47,7 @@ func main() {
 	for time, t := range WikiSchedule {
 		gocron.Every(1).Day().At(time).Do(quiz.SendWikiMsg, bot, t)
 	}
+	gocron.Every(1).Day().At("08:00").Do(quiz.SendFactMsg, bot)
 	gocron.Every(1).Sunday().At("15:00").Do(quiz.SendScheduleMsg, bot)
 	gocron.Every(1).Thursday().At("15:00").Do(quiz.SendRatingMsg, bot)
 	<-gocron.Start()

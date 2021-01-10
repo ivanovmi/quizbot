@@ -23,6 +23,8 @@ const (
 	ScheduleURL = "http://saratov.quizplease.ru/schedule"
 	// WikiURL is main page of wikipedia
 	WikiURL = "https://ru.wikipedia.org"
+	// FactURL is main page of random fact
+	FactURL = "https://randstuff.ru/fact/"
 	house   = "\xF0\x9F\x8F\xA0"
 	link    = "\xF0\x9F\x94\x97"
 	clock   = "\xF0\x9F\x95\x94"

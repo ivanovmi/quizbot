@@ -51,6 +51,7 @@ func getDykArticle() (*[]string, error) {
 	doc.Find("#main-dyk>ul").Each(func(i int, s *goquery.Selection) {
 		s.Find("li").Each(func(i int, s *goquery.Selection) {
 			htmlText, _ := s.Html()
+			htmlText = strings.ReplaceAll(htmlText, "<span class=\"nowrap\"><i>(на илл.)</i></span>", "")
 			artList = append(artList, fmt.Sprintf("%s %s", bulb, htmlText))
 		})
 	})
